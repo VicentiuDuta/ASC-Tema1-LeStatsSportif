@@ -49,11 +49,12 @@ class DataIngestor:
         if state not in self.df['LocationDesc'].unique():
             raise ValueError(f"State '{state}' not found in the dataset.")
         
+        # Filter the DataFrame for the specific question and state
         filtered_data = self.df[(self.df['Question'] == question) & (self.df['LocationDesc'] == state)]
-        
         if filtered_data.empty:
             raise ValueError(f"No data found for question '{question}' in state '{state}'.")
         
+        # Calculate the mean of 'Data_Value'
         mean_value = filtered_data['Data_Value'].mean()
         return mean_value
     
@@ -61,6 +62,7 @@ class DataIngestor:
         if question not in self.df['Question'].unique():
             raise ValueError(f"Question '{question}' not found in the dataset.")
         
+        # Filter the DataFrame for the specific question
         filtered_data = self.df[self.df['Question'] == question]
         global_mean = filtered_data['Data_Value'].mean()
         return global_mean
@@ -71,6 +73,7 @@ class DataIngestor:
         
         global_mean = self.global_mean(question)
         state_means = self.states_mean(question)
+        # Calculate the difference from the global mean for each state
         differences = {state: global_mean - state_mean for state, state_mean in state_means.items()}
         return differences
         
@@ -80,7 +83,7 @@ class DataIngestor:
         
         if state not in self.df['LocationDesc'].unique():
             raise ValueError(f"State '{state}' not found in the dataset.")
-        
+        # Calculate the difference from the global mean for a specific state
         global_mean = self.global_mean(question)
         state_mean = self.state_mean(question, state)
         return global_mean - state_mean
@@ -88,5 +91,64 @@ class DataIngestor:
     def mean_by_category(self, question):
         if question not in self.df['Question'].unique():
             raise ValueError(f"Question '{question}' not found in the dataset.")
+        
+        # Filter the DataFrame for the specific question
+        filtered_data = self.df[self.df['Question'] == question]
+        grouped = filtered_data.groupby(['LocationDesc', 'StratificationCategory1', 'Stratification1'])
+        means = grouped['Data_Value'].mean()
+        
+        # Convert the result to a dictionary with the desired structure
+        result_dict = {
+            str((location, cat1, cat2)): value
+            for (location, cat1, cat2), value in means.items()
+        }
+        
+        return result_dict
+    
+    def state_mean_by_category(self, question, state):
+        if question not in self.df['Question'].unique():
+            raise ValueError(f"Question '{question}' not found in the dataset.")
+        
+        if state not in self.df['LocationDesc'].unique():
+            raise ValueError(f"State '{state}' not found in the dataset.")
+        
+        # Filter the DataFrame for the specific question and state
+        filtered_data = self.df[(self.df['Question'] == question) & (self.df['LocationDesc'] == state)]
+        grouped = filtered_data.groupby(['StratificationCategory1', 'Stratification1'])
+        means = grouped['Data_Value'].mean()
+        
+        # Convert the result to a dictionary with the desired structure
+        result_dict = {
+            state: {
+                str((cat1, cat2)): value
+                for (cat1, cat2), value in means.items()
+            }
+        }
+        
+        return result_dict
+    
+
+    def best5(self, question):
+        if question not in self.df['Question'].unique():
+            raise ValueError(f"Question '{question}' not found in the dataset.")
+        # Calculate the mean for each state and return the top 5
+        states_mean = self.states_mean(question)
+        if question in self.questions_best_is_max:
+            return dict(sorted(states_mean.items(), key=lambda item: item[1], reverse=True)[:5])
+        else:
+            return dict(sorted(states_mean.items(), key=lambda item: item[1])[:5])
+    
+    def worst5(self, question):
+        if question not in self.df['Question'].unique():
+            raise ValueError(f"Question '{question}' not found in the dataset.")
+        # Calculate the mean for each state and return the bottom 5
+        states_mean = self.states_mean(question)
+        if question in self.questions_best_is_max:
+            return dict(sorted(states_mean.items(), key=lambda item: item[1])[:5])
+        else:
+            return dict(sorted(states_mean.items(), key=lambda item: item[1], reverse=True)[:5])
+            
+        
+        
         
         
