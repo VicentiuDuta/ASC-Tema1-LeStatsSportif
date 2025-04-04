@@ -1,3 +1,8 @@
+"""
+This module defines all the API routes for the Le Stats Sportif server.
+It handles various endpoints for calculating statistics based on nutrition and health data.
+"""
+
 from app import webserver
 from flask import request, jsonify
 
@@ -18,17 +23,15 @@ def post_endpoint():
 
         # Sending back a JSON response
         return jsonify(response)
-    else:
-        # Method Not Allowed
-        return jsonify({"error": "Method not allowed"}), 405
+
+    # Method Not Allowed
+    return jsonify({"error": "Method not allowed"}), 405
 
 @webserver.route('/api/get_results/<job_id>', methods=['GET'])
-def get_response(job_id):
+def get_results(job_id):
     print(f"JobID is {job_id}")
     job_id = int(job_id)
-    # TODO
     # Check if job_id is valid
-    
     # Check if job_id is done and return the result
     #    res = res_for(job_id)
     #    return jsonify({
@@ -37,19 +40,19 @@ def get_response(job_id):
     #    })
 
     # If not, return running status
-    
+
     if job_id not in webserver.tasks_runner.jobs:
         return jsonify({
             "status": "error",
             "reason": "Invalid job_id"
         })
-    
+
     if webserver.tasks_runner.jobs[job_id]['status'] == 'running':
         return jsonify({
             "status": "running"
         })
-    
-    elif webserver.tasks_runner.jobs[job_id]['status'] == 'done':
+
+    if webserver.tasks_runner.jobs[job_id]['status'] == 'done':
         result_file = f"results/{str(job_id)}"
         if os.path.exists(result_file):
             with open(result_file, 'r') as f:
@@ -61,248 +64,310 @@ def get_response(job_id):
 
 @webserver.route('/api/states_mean', methods=['POST'])
 def states_mean_request():
-    # Get request data
-    data = request.json
-    print(f"Got request {data}")
+    # Check if the graceful shutdown event is set
+    if not webserver.tasks_runner.graceful_shutdown.is_set():
+        # Get request data
+        data = request.json
+        print(f"Got request {data}")
+        # Register job. Don't wait for task to finish
+        # Increment job_id counter
+        # Return associated job_id
 
-    # TODO
-    # Register job. Don't wait for task to finish
-    # Increment job_id counter
-    # Return associated job_id
-    
-    job_id = webserver.job_counter
-    # Create task as a closure
-    
-    def task():
-        result = webserver.data_ingestor.states_mean(data['question'])
-        return result
-    
-    # Add task to the thread pool. Task will contain the job_id, the task and the status
-    webserver.tasks_runner.add_job(job_id, task)
-    # Increment job_id counter
-    webserver.job_counter += 1
-    # Increment threadpool remaining jobs
-    with webserver.tasks_runner.remaining_jobs_lock:
-        webserver.tasks_runner.remaining_jobs += 1
-    # Return associated job_id
-    return jsonify({"job_id": job_id})
-    
+        job_id = webserver.job_counter
+        # Create task as a closure
+        def task():
+            result = webserver.data_ingestor.states_mean(data['question'])
+            return result
+
+        # Add task to the thread pool. Task will contain the job_id, the task and the status
+        webserver.tasks_runner.add_job(job_id, task)
+        # Increment job_id counter
+        webserver.job_counter += 1
+        # Increment threadpool remaining jobs
+        with webserver.tasks_runner.remaining_jobs_lock:
+            webserver.tasks_runner.remaining_jobs += 1
+        # Return associated job_id
+        return jsonify({"job_id": job_id})
+
+    return jsonify({
+        "status": "error",
+        "reason": "shutting down"
+    })
+
 @webserver.route('/api/state_mean', methods=['POST'])
 def state_mean_request():
-    # TODO
     # Get request data
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
+    if not webserver.tasks_runner.graceful_shutdown.is_set():
+        data = request.json
+        job_id = webserver.job_counter
+        # Create task as a closure
+        def task():
+            result = webserver.data_ingestor.state_mean(data['question'], data['state'])
+            return result
 
-    data = request.json
-    job_id = webserver.job_counter
-    # Create task as a closure
-    def task():
-        result = webserver.data_ingestor.state_mean(data['question'], data['state'])
-        return result
-    
-    # Add task to the thread pool. Task will contain the job_id, the task and the status
-    webserver.tasks_runner.add_job(job_id, task)
-    # Increment job_id counter
-    webserver.job_counter += 1
-    # Increment threadpool remaining jobs
-    with webserver.tasks_runner.remaining_jobs_lock:
-        webserver.tasks_runner.remaining_jobs += 1
-    
-    # Return associated job_id
-    return jsonify({"job_id": job_id})
+        # Add task to the thread pool. Task will contain the job_id, the task and the status
+        webserver.tasks_runner.add_job(job_id, task)
+        # Increment job_id counter
+        webserver.job_counter += 1
+        # Increment threadpool remaining jobs
+        with webserver.tasks_runner.remaining_jobs_lock:
+            webserver.tasks_runner.remaining_jobs += 1
+
+        # Return associated job_id
+        return jsonify({"job_id": job_id})
+
+    return jsonify({
+            "status": "error",
+            "reason": "shutting down"
+    })
 
 @webserver.route('/api/best5', methods=['POST'])
 def best5_request():
-    # TODO
     # Get request data
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
-    
-    data = request.json
-    job_id = webserver.job_counter
-    # Create task as a closure
-    def task():
-        result = webserver.data_ingestor.best5(data['question'])
-        return result
+    if not webserver.tasks_runner.graceful_shutdown.is_set():
+        data = request.json
+        job_id = webserver.job_counter
+        # Create task as a closure
+        def task():
+            result = webserver.data_ingestor.best5(data['question'])
+            return result
 
-    # Add task to the thread pool. Task will contain the job_id, the task and the status
-    webserver.tasks_runner.add_job(job_id, task)
-    # Increment job_id counter
-    webserver.job_counter += 1
-    # Increment threadpool remaining jobs
-    with webserver.tasks_runner.remaining_jobs_lock:
-        webserver.tasks_runner.remaining_jobs += 1
-    
-    # Return associated job_id
-    return jsonify({"job_id": job_id})
+        # Add task to the thread pool. Task will contain the job_id, the task and the status
+        webserver.tasks_runner.add_job(job_id, task)
+        # Increment job_id counter
+        webserver.job_counter += 1
+        # Increment threadpool remaining jobs
+        with webserver.tasks_runner.remaining_jobs_lock:
+            webserver.tasks_runner.remaining_jobs += 1
+
+        # Return associated job_id
+        return jsonify({"job_id": job_id})
+
+    return jsonify({
+        "status": "error",
+        "reason": "shutting down"
+    })
 
 @webserver.route('/api/worst5', methods=['POST'])
 def worst5_request():
-    # TODO
     # Get request data
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
-    
-    data = request.json
-    job_id = webserver.job_counter
-    # Create task as a closure
-    def task():
-        result = webserver.data_ingestor.worst5(data['question'])
-        return result
-    
-    # Add task to the thread pool. Task will contain the job_id, the task and the status
-    webserver.tasks_runner.add_job(job_id, task)
-    # Increment job_id counter
-    webserver.job_counter += 1
-    # Increment threadpool remaining jobs
-    with webserver.tasks_runner.remaining_jobs_lock:
-        webserver.tasks_runner.remaining_jobs += 1
-    
-    # Return associated job_id
-    return jsonify({"job_id": job_id})
+    if not webserver.tasks_runner.graceful_shutdown.is_set():
+        data = request.json
+        job_id = webserver.job_counter
+        # Create task as a closure
+        def task():
+            result = webserver.data_ingestor.worst5(data['question'])
+            return result
+
+        # Add task to the thread pool. Task will contain the job_id, the task and the status
+        webserver.tasks_runner.add_job(job_id, task)
+        # Increment job_id counter
+        webserver.job_counter += 1
+        # Increment threadpool remaining jobs
+        with webserver.tasks_runner.remaining_jobs_lock:
+            webserver.tasks_runner.remaining_jobs += 1
+
+        # Return associated job_id
+        return jsonify({"job_id": job_id})
+
+    return jsonify({
+        "status": "error",
+        "reason": "shutting down"
+    })
 
 @webserver.route('/api/global_mean', methods=['POST'])
 def global_mean_request():
-    # TODO
     # Get request data
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
-    
-    data = request.json
-    job_id = webserver.job_counter
-    # Create task as a closure
-    def task():
-        result = webserver.data_ingestor.global_mean(data['question'])
-        return result
-    
-    # Add task to the thread pool. Task will contain the job_id, the task and the status
-    webserver.tasks_runner.add_job(job_id, task)
-    # Increment job_id counter
-    webserver.job_counter += 1
-    # Increment threadpool remaining jobs
-    with webserver.tasks_runner.remaining_jobs_lock:
-        webserver.tasks_runner.remaining_jobs += 1
-    
-    # Return associated job_id
-    return jsonify({"job_id": job_id})
+    if not webserver.tasks_runner.graceful_shutdown.is_set():
+        data = request.json
+        job_id = webserver.job_counter
+        # Create task as a closure
+        def task():
+            result = webserver.data_ingestor.global_mean(data['question'])
+            return result
+
+        # Add task to the thread pool. Task will contain the job_id, the task and the status
+        webserver.tasks_runner.add_job(job_id, task)
+        # Increment job_id counter
+        webserver.job_counter += 1
+        # Increment threadpool remaining jobs
+        with webserver.tasks_runner.remaining_jobs_lock:
+            webserver.tasks_runner.remaining_jobs += 1
+
+        # Return associated job_id
+        return jsonify({"job_id": job_id})
+
+    return jsonify({
+        "status": "error",
+        "reason": "shutting down"
+    })
 
 
 @webserver.route('/api/diff_from_mean', methods=['POST'])
 def diff_from_mean_request():
-    # TODO
     # Get request data
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
-    
-    data = request.json
-    job_id = webserver.job_counter
-    # Create task as a closure
-    def task():
-        result = webserver.data_ingestor.diff_from_mean(data['question'])
-        return result
-    
-    # Add task to the thread pool. Task will contain the job_id, the task and the status
-    webserver.tasks_runner.add_job(job_id, task)
-    # Increment job_id counter
-    webserver.job_counter += 1
-    # Increment threadpool remaining jobs
-    with webserver.tasks_runner.remaining_jobs_lock:
-        webserver.tasks_runner.remaining_jobs += 1
-    
-    # Return associated job_id
-    return jsonify({"job_id": job_id})
+    if not webserver.tasks_runner.graceful_shutdown.is_set():
+        data = request.json
+        job_id = webserver.job_counter
+        # Create task as a closure
+        def task():
+            result = webserver.data_ingestor.diff_from_mean(data['question'])
+            return result
+
+        # Add task to the thread pool. Task will contain the job_id, the task and the status
+        webserver.tasks_runner.add_job(job_id, task)
+        # Increment job_id counter
+        webserver.job_counter += 1
+        # Increment threadpool remaining jobs
+        with webserver.tasks_runner.remaining_jobs_lock:
+            webserver.tasks_runner.remaining_jobs += 1
+
+        # Return associated job_id
+        return jsonify({"job_id": job_id})
+
+    return jsonify({
+        "status": "error",
+        "reason": "shutdown"
+    })
 
 @webserver.route('/api/state_diff_from_mean', methods=['POST'])
 def state_diff_from_mean_request():
-    # TODO
     # Get request data
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
+    if not webserver.tasks_runner.graceful_shutdown.is_set():
+        data = request.json
+        job_id = webserver.job_counter
+        # Create task as a closure
+        def task():
+            result = webserver.data_ingestor.state_diff_from_mean(data['question'], data['state'])
+            return result
 
-    data = request.json
-    job_id = webserver.job_counter
-    # Create task as a closure
-    def task():
-        result = webserver.data_ingestor.state_diff_from_mean(data['question'], data['state'])
-        return result
-    
-    # Add task to the thread pool. Task will contain the job_id, the task and the status
-    webserver.tasks_runner.add_job(job_id, task)
-    # Increment job_id counter
-    webserver.job_counter += 1
-    # Increment threadpool remaining jobs
-    with webserver.tasks_runner.remaining_jobs_lock:
-        webserver.tasks_runner.remaining_jobs += 1
-    
-    # Return associated job_id
-    return jsonify({"job_id": job_id})
+        # Add task to the thread pool. Task will contain the job_id, the task and the status
+        webserver.tasks_runner.add_job(job_id, task)
+        # Increment job_id counter
+        webserver.job_counter += 1
+        # Increment threadpool remaining jobs
+        with webserver.tasks_runner.remaining_jobs_lock:
+            webserver.tasks_runner.remaining_jobs += 1
+
+        # Return associated job_id
+        return jsonify({"job_id": job_id})
+
+    return jsonify({
+        "status": "error",
+        "reason": "shutting down"
+    })
 
 @webserver.route('/api/mean_by_category', methods=['POST'])
 def mean_by_category_request():
-    # TODO
     # Get request data
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
-    
-    data = request.json
-    job_id = webserver.job_counter
-    # Create task as a closure
-    def task():
-        result = webserver.data_ingestor.mean_by_category(data['question'])
-        return result
-    
-    # Add task to the thread pool. Task will contain the job_id, the task and the status
-    webserver.tasks_runner.add_job(job_id, task)
-    # Increment job_id counter
-    webserver.job_counter += 1
-    # Increment threadpool remaining jobs
-    with webserver.tasks_runner.remaining_jobs_lock:
-        webserver.tasks_runner.remaining_jobs += 1
-    
-    # Return associated job_id
-    return jsonify({"job_id": job_id})
+    if not webserver.tasks_runner.graceful_shutdown.is_set():
+        data = request.json
+        job_id = webserver.job_counter
+        # Create task as a closure
+        def task():
+            result = webserver.data_ingestor.mean_by_category(data['question'])
+            return result
+
+        # Add task to the thread pool. Task will contain the job_id, the task and the status
+        webserver.tasks_runner.add_job(job_id, task)
+        # Increment job_id counter
+        webserver.job_counter += 1
+        # Increment threadpool remaining jobs
+        with webserver.tasks_runner.remaining_jobs_lock:
+            webserver.tasks_runner.remaining_jobs += 1
+
+        # Return associated job_id
+        return jsonify({"job_id": job_id})
+
+    return jsonify({
+        "status": "error",
+        "reason": "shutting down"
+    })
 
 @webserver.route('/api/state_mean_by_category', methods=['POST'])
 def state_mean_by_category_request():
-    # TODO
     # Get request data
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
+    if not webserver.tasks_runner.graceful_shutdown.is_set():
+        data = request.json
+        job_id = webserver.job_counter
+        # Create task as a closure
+        def task():
+            result = webserver.data_ingestor.state_mean_by_category(data['question'], data['state'])
+            return result
 
-    data = request.json
-    job_id = webserver.job_counter
-    # Create task as a closure
-    def task():
-        result = webserver.data_ingestor.state_mean_by_category(data['question'], data['state'])
-        return result
-    
-    # Add task to the thread pool. Task will contain the job_id, the task and the status
-    webserver.tasks_runner.add_job(job_id, task)
-    # Increment job_id counter
-    webserver.job_counter += 1
-    # Increment threadpool remaining jobs
-    with webserver.tasks_runner.remaining_jobs_lock:
-        webserver.tasks_runner.remaining_jobs += 1
-        
-    # Return associated job_id
-    return jsonify({"job_id": job_id})
-    
-    
+        # Add task to the thread pool. Task will contain the job_id, the task and the status
+        webserver.tasks_runner.add_job(job_id, task)
+        # Increment job_id counter
+        webserver.job_counter += 1
+        # Increment threadpool remaining jobs
+        with webserver.tasks_runner.remaining_jobs_lock:
+            webserver.tasks_runner.remaining_jobs += 1
+
+        # Return associated job_id
+        return jsonify({"job_id": job_id})
+
+    return jsonify({
+        "status": "error",
+        "reason": "shutting down"
+    })
+
+
 @webserver.route('/api/num_jobs', methods=['GET'])
 def get_num_jobs():
     return jsonify({
         'num_jobs': webserver.tasks_runner.remaining_jobs
     })
-    
+
+@webserver.route('/api/graceful_shutdown', methods=['GET'])
+def graceful_shutdown():
+    # Set the graceful shutdown event
+    webserver.tasks_runner.graceful_shutdown.set()
+    if webserver.tasks_runner.remaining_jobs > 0:
+        return jsonify({
+            "status": "running"
+        })
+
+    return jsonify({
+        "status": "done"
+    })
+
+@webserver.route('/api/jobs', methods=['GET'])
+def jobs():
+    data = []
+    # Extract job informations from the tasks_runner
+    for job_id, job_info in webserver.tasks_runner.jobs.items():
+        data.append({
+            f'job_id_{str(job_id)}': job_info['status']
+        })
+
+    return jsonify({
+        "status": "done",
+        "data": data  
+    })
 
 # You can check localhost in your browser to see what this displays
 @webserver.route('/')

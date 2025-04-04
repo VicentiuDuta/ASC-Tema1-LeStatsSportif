@@ -17,16 +17,17 @@ class ThreadPool:
         # Note: the TP_NUM_OF_THREADS env var will be defined by the checker
         if 'TP_NUM_OF_THREADS' in os.environ:
             self.num_threads = int(os.environ['TP_NUM_OF_THREADS'])
-        
+
         else:
             self.num_threads = os.cpu_count()
-        
+
         self.threads = []
         self.queue = Queue()
         self.jobs = {}
         self.remaining_jobs = 0
         self.remaining_jobs_lock = Lock()
-        
+        self.graceful_shutdown = Event()
+
     # Add a job to the queue
     def add_job(self, job_id, task):
         job_info = {
@@ -34,10 +35,10 @@ class ThreadPool:
             'status': 'running',
             'task' : task
         }
-        
+
         self.jobs[job_id] = job_info
         self.queue.put(job_info)
-    
+
     # Start the thread pool
     def start(self):
         for i in range(self.num_threads):
@@ -45,19 +46,15 @@ class ThreadPool:
             self.threads.append(thread)
             thread.start()
 
-        
-        
 
 class TaskRunner(Thread):
-    def __init__(self, id, threadpool):
-        # TODO: init necessary data structures
+    def __init__(self, tid, threadpool):
         Thread.__init__(self)
-        self.id = id
+        self.id = tid
         self.threadpool = threadpool
 
     def run(self):
         while True:
-            # TODO
             # Get pending job
             # Execute the job and save the result to disk
             # Repeat until graceful_shutdown
@@ -67,22 +64,22 @@ class TaskRunner(Thread):
                 job_id = job_info['job_id']
                 task = job_info['task']
                 # Execute the task
+                print(f"TaskRunner {self.id} executing job {job_id}")
                 result = task()
-                
+
                 # Save the result to disk
                 with open(f'results/{job_id}', 'w') as f:
                     json.dump(result, f)
-                
+
                 # Mark the job as done
                 job_info['status'] = 'done'
-                
+
                 self.threadpool.queue.task_done()
-                
+
                 with self.threadpool.remaining_jobs_lock:
                     self.threadpool.remaining_jobs -= 1
-                    
+
+                print(f"TaskRunner {self.id} finished job {job_id}")
+
             except Exception as e:
                 print(f"Error in TaskRunner {self.id}: {e}")
-                
-                
-                    
