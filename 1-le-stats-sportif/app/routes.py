@@ -49,9 +49,23 @@ def states_mean_request():
     # Increment job_id counter
     # Return associated job_id
     
-
-    return jsonify({"status": "NotImplemented"})
-
+    job_id = webserver.job_counter
+    # Create task as a closure
+    
+    def task():
+        result = webserver.data_ingestor.states_mean(data['question'])
+        return result
+    
+    # Add task to the thread pool. Task will contain the job_id, the task and the status
+    webserver.tasks_runner.add_job(job_id, task)
+    # Increment job_id counter
+    webserver.job_counter += 1
+    # Increment threadpool remaining jobs
+    with webserver.tasks_runner.remaining_jobs_lock:
+        webserver.tasks_runner.remaining_jobs += 1
+    # Return associated job_id
+    return jsonify({"job_id": job_id})
+    
 @webserver.route('/api/state_mean', methods=['POST'])
 def state_mean_request():
     # TODO
@@ -132,6 +146,13 @@ def state_mean_by_category_request():
     # Return associated job_id
 
     return jsonify({"status": "NotImplemented"})
+
+@webserver.route('/api/num_jobs', methods=['GET'])
+def get_num_jobs():
+    return jsonify({
+        'num_jobs': webserver.tasks_runner.remaining_jobs
+    })
+    
 
 # You can check localhost in your browser to see what this displays
 @webserver.route('/')
