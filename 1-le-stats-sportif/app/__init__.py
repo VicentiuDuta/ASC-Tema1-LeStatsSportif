@@ -1,3 +1,9 @@
+"""
+Initialization module for the Le Stats Sportif application.
+
+This module creates and configures the Flask webserver, initializes the data ingestor,
+and sets up the task runner thread pool.
+"""
 import os
 from flask import Flask
 from app.data_ingestor import DataIngestor
