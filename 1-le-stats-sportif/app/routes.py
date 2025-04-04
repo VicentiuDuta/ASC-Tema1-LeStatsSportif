@@ -27,7 +27,7 @@ def get_response(job_id):
     print(f"JobID is {job_id}")
     # TODO
     # Check if job_id is valid
-
+    
     # Check if job_id is done and return the result
     #    res = res_for(job_id)
     #    return jsonify({
@@ -36,7 +36,27 @@ def get_response(job_id):
     #    })
 
     # If not, return running status
-    return jsonify({'status': 'NotImplemented'})
+    
+    if job_id not in webserver.tasks_runner.jobs:
+        return jsonify({
+            "status": "error",
+            "reason": "Invalid job_id"
+        })
+    
+    if webserver.tasks_runner.jobs[job_id]['status'] == 'running':
+        return jsonify({
+            "status": "running"
+        })
+    
+    elif webserver.tasks_runner.jobs[job_id]['status'] == 'done':
+        result_file = f"results/{job_id}"
+        if os.path.exists(result_file):
+            with open(result_file, 'r') as f:
+                result = json.load(f)
+            return jsonify({
+                "status": "done",
+                "data": result
+            })
 
 @webserver.route('/api/states_mean', methods=['POST'])
 def states_mean_request():
