@@ -25,6 +25,7 @@ def post_endpoint():
 @webserver.route('/api/get_results/<job_id>', methods=['GET'])
 def get_response(job_id):
     print(f"JobID is {job_id}")
+    job_id = int(job_id)
     # TODO
     # Check if job_id is valid
     
@@ -49,7 +50,7 @@ def get_response(job_id):
         })
     
     elif webserver.tasks_runner.jobs[job_id]['status'] == 'done':
-        result_file = f"results/{job_id}"
+        result_file = f"results/{str(job_id)}"
         if os.path.exists(result_file):
             with open(result_file, 'r') as f:
                 result = json.load(f)
@@ -94,8 +95,23 @@ def state_mean_request():
     # Increment job_id counter
     # Return associated job_id
 
-    return jsonify({"status": "NotImplemented"})
-
+    data = request.json
+    job_id = webserver.job_counter
+    # Create task as a closure
+    def task():
+        result = webserver.data_ingestor.state_mean(data['question'], data['state'])
+        return result
+    
+    # Add task to the thread pool. Task will contain the job_id, the task and the status
+    webserver.tasks_runner.add_job(job_id, task)
+    # Increment job_id counter
+    webserver.job_counter += 1
+    # Increment threadpool remaining jobs
+    with webserver.tasks_runner.remaining_jobs_lock:
+        webserver.tasks_runner.remaining_jobs += 1
+    
+    # Return associated job_id
+    return jsonify({"job_id": job_id})
 
 @webserver.route('/api/best5', methods=['POST'])
 def best5_request():
@@ -104,8 +120,24 @@ def best5_request():
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
+    
+    data = request.json
+    job_id = webserver.job_counter
+    # Create task as a closure
+    def task():
+        result = webserver.data_ingestor.best5(data['question'])
+        return result
 
-    return jsonify({"status": "NotImplemented"})
+    # Add task to the thread pool. Task will contain the job_id, the task and the status
+    webserver.tasks_runner.add_job(job_id, task)
+    # Increment job_id counter
+    webserver.job_counter += 1
+    # Increment threadpool remaining jobs
+    with webserver.tasks_runner.remaining_jobs_lock:
+        webserver.tasks_runner.remaining_jobs += 1
+    
+    # Return associated job_id
+    return jsonify({"job_id": job_id})
 
 @webserver.route('/api/worst5', methods=['POST'])
 def worst5_request():
@@ -114,8 +146,24 @@ def worst5_request():
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
-
-    return jsonify({"status": "NotImplemented"})
+    
+    data = request.json
+    job_id = webserver.job_counter
+    # Create task as a closure
+    def task():
+        result = webserver.data_ingestor.worst5(data['question'])
+        return result
+    
+    # Add task to the thread pool. Task will contain the job_id, the task and the status
+    webserver.tasks_runner.add_job(job_id, task)
+    # Increment job_id counter
+    webserver.job_counter += 1
+    # Increment threadpool remaining jobs
+    with webserver.tasks_runner.remaining_jobs_lock:
+        webserver.tasks_runner.remaining_jobs += 1
+    
+    # Return associated job_id
+    return jsonify({"job_id": job_id})
 
 @webserver.route('/api/global_mean', methods=['POST'])
 def global_mean_request():
@@ -124,8 +172,25 @@ def global_mean_request():
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
+    
+    data = request.json
+    job_id = webserver.job_counter
+    # Create task as a closure
+    def task():
+        result = webserver.data_ingestor.global_mean(data['question'])
+        return result
+    
+    # Add task to the thread pool. Task will contain the job_id, the task and the status
+    webserver.tasks_runner.add_job(job_id, task)
+    # Increment job_id counter
+    webserver.job_counter += 1
+    # Increment threadpool remaining jobs
+    with webserver.tasks_runner.remaining_jobs_lock:
+        webserver.tasks_runner.remaining_jobs += 1
+    
+    # Return associated job_id
+    return jsonify({"job_id": job_id})
 
-    return jsonify({"status": "NotImplemented"})
 
 @webserver.route('/api/diff_from_mean', methods=['POST'])
 def diff_from_mean_request():
@@ -134,8 +199,24 @@ def diff_from_mean_request():
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
-
-    return jsonify({"status": "NotImplemented"})
+    
+    data = request.json
+    job_id = webserver.job_counter
+    # Create task as a closure
+    def task():
+        result = webserver.data_ingestor.diff_from_mean(data['question'])
+        return result
+    
+    # Add task to the thread pool. Task will contain the job_id, the task and the status
+    webserver.tasks_runner.add_job(job_id, task)
+    # Increment job_id counter
+    webserver.job_counter += 1
+    # Increment threadpool remaining jobs
+    with webserver.tasks_runner.remaining_jobs_lock:
+        webserver.tasks_runner.remaining_jobs += 1
+    
+    # Return associated job_id
+    return jsonify({"job_id": job_id})
 
 @webserver.route('/api/state_diff_from_mean', methods=['POST'])
 def state_diff_from_mean_request():
@@ -145,7 +226,23 @@ def state_diff_from_mean_request():
     # Increment job_id counter
     # Return associated job_id
 
-    return jsonify({"status": "NotImplemented"})
+    data = request.json
+    job_id = webserver.job_counter
+    # Create task as a closure
+    def task():
+        result = webserver.data_ingestor.state_diff_from_mean(data['question'], data['state'])
+        return result
+    
+    # Add task to the thread pool. Task will contain the job_id, the task and the status
+    webserver.tasks_runner.add_job(job_id, task)
+    # Increment job_id counter
+    webserver.job_counter += 1
+    # Increment threadpool remaining jobs
+    with webserver.tasks_runner.remaining_jobs_lock:
+        webserver.tasks_runner.remaining_jobs += 1
+    
+    # Return associated job_id
+    return jsonify({"job_id": job_id})
 
 @webserver.route('/api/mean_by_category', methods=['POST'])
 def mean_by_category_request():
@@ -154,8 +251,24 @@ def mean_by_category_request():
     # Register job. Don't wait for task to finish
     # Increment job_id counter
     # Return associated job_id
-
-    return jsonify({"status": "NotImplemented"})
+    
+    data = request.json
+    job_id = webserver.job_counter
+    # Create task as a closure
+    def task():
+        result = webserver.data_ingestor.mean_by_category(data['question'])
+        return result
+    
+    # Add task to the thread pool. Task will contain the job_id, the task and the status
+    webserver.tasks_runner.add_job(job_id, task)
+    # Increment job_id counter
+    webserver.job_counter += 1
+    # Increment threadpool remaining jobs
+    with webserver.tasks_runner.remaining_jobs_lock:
+        webserver.tasks_runner.remaining_jobs += 1
+    
+    # Return associated job_id
+    return jsonify({"job_id": job_id})
 
 @webserver.route('/api/state_mean_by_category', methods=['POST'])
 def state_mean_by_category_request():
@@ -165,8 +278,25 @@ def state_mean_by_category_request():
     # Increment job_id counter
     # Return associated job_id
 
-    return jsonify({"status": "NotImplemented"})
-
+    data = request.json
+    job_id = webserver.job_counter
+    # Create task as a closure
+    def task():
+        result = webserver.data_ingestor.state_mean_by_category(data['question'], data['state'])
+        return result
+    
+    # Add task to the thread pool. Task will contain the job_id, the task and the status
+    webserver.tasks_runner.add_job(job_id, task)
+    # Increment job_id counter
+    webserver.job_counter += 1
+    # Increment threadpool remaining jobs
+    with webserver.tasks_runner.remaining_jobs_lock:
+        webserver.tasks_runner.remaining_jobs += 1
+        
+    # Return associated job_id
+    return jsonify({"job_id": job_id})
+    
+    
 @webserver.route('/api/num_jobs', methods=['GET'])
 def get_num_jobs():
     return jsonify({

@@ -56,7 +56,9 @@ class DataIngestor:
         
         # Calculate the mean of 'Data_Value'
         mean_value = filtered_data['Data_Value'].mean()
-        return mean_value
+        return {
+            state: mean_value
+        }
     
     def global_mean(self, question):
         if question not in self.df['Question'].unique():
@@ -65,16 +67,18 @@ class DataIngestor:
         # Filter the DataFrame for the specific question
         filtered_data = self.df[self.df['Question'] == question]
         global_mean = filtered_data['Data_Value'].mean()
-        return global_mean
+        return {
+            "global_mean": global_mean
+        }
 
     def diff_from_mean(self, question):
         if question not in self.df['Question'].unique():
             raise ValueError(f"Question '{question}' not found in the dataset.")
         
-        global_mean = self.global_mean(question)
-        state_means = self.states_mean(question)
+        global_mean = self.global_mean(question)['global_mean']
+        states_mean = self.states_mean(question)
         # Calculate the difference from the global mean for each state
-        differences = {state: global_mean - state_mean for state, state_mean in state_means.items()}
+        differences = {state: global_mean - state_mean for state, state_mean in states_mean.items()}
         return differences
         
     def state_diff_from_mean(self, question, state):
@@ -84,9 +88,11 @@ class DataIngestor:
         if state not in self.df['LocationDesc'].unique():
             raise ValueError(f"State '{state}' not found in the dataset.")
         # Calculate the difference from the global mean for a specific state
-        global_mean = self.global_mean(question)
-        state_mean = self.state_mean(question, state)
-        return global_mean - state_mean
+        global_mean = self.global_mean(question)['global_mean']
+        state_mean = self.state_mean(question, state)[state]
+        return {
+            state: global_mean - state_mean
+        }    
         
     def mean_by_category(self, question):
         if question not in self.df['Question'].unique():
