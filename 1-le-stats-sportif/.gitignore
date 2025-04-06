@@ -2,3 +2,4 @@ app/test_data_ingestor.py
 venv/
 __pycache__/
 *.pyc
+results/
