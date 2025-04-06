@@ -21,7 +21,7 @@ webserver.logger = logging.getLogger(__name__)
 # Set the logging level to INFO
 webserver.logger.setLevel(logging.INFO)
 # Create a rotating file handler for logging
-handler = RotatingFileHandler('log/webserver.log', maxBytes = 10000, backupCount = 3)
+handler = RotatingFileHandler('log/webserver.log', maxBytes = 10000, backupCount = 10)
 # Set the timezone to UTC
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 formatter.converter = time.gmtime
