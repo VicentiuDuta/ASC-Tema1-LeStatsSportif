@@ -4,7 +4,6 @@ It provides classes to manage a pool of worker threads and execute submitted job
 """
 from queue import Queue, Empty
 from threading import Thread, Event, Lock
-import time
 import os
 import json
 
@@ -31,7 +30,7 @@ class ThreadPool:
 
         else:
             self.num_threads = os.cpu_count()
-            
+
         self.threads = []
         self.queue = Queue()
         self.jobs = {}

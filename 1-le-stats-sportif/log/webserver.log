@@ -1,31 +1,93 @@
-2025-04-06 12:24:19,129 - app - INFO - Job 109 is done
-2025-04-06 12:24:19,132 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)'}
-2025-04-06 12:24:19,132 - app - INFO - Job 110 added to the queue for processing.
-2025-04-06 12:24:19,134 - app - INFO - Received get_results request for job_id: 110
-2025-04-06 12:24:19,134 - app - INFO - Job 110 is still running
-2025-04-06 12:24:19,338 - app - INFO - Received get_results request for job_id: 110
-2025-04-06 12:24:19,338 - app - INFO - Job 110 is done
-2025-04-06 12:24:19,340 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults aged 18 years and older who have an overweight classification'}
-2025-04-06 12:24:19,340 - app - INFO - Job 111 added to the queue for processing.
-2025-04-06 12:24:19,343 - app - INFO - Received get_results request for job_id: 111
-2025-04-06 12:24:19,343 - app - INFO - Job 111 is still running
-2025-04-06 12:24:19,545 - app - INFO - Received get_results request for job_id: 111
-2025-04-06 12:24:19,545 - app - INFO - Job 111 is done
-2025-04-06 12:24:19,547 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who report consuming fruit less than one time daily'}
-2025-04-06 12:24:19,547 - app - INFO - Job 112 added to the queue for processing.
-2025-04-06 12:24:19,549 - app - INFO - Received get_results request for job_id: 112
-2025-04-06 12:24:19,549 - app - INFO - Job 112 is still running
-2025-04-06 12:24:19,751 - app - INFO - Received get_results request for job_id: 112
-2025-04-06 12:24:19,751 - app - INFO - Job 112 is done
-2025-04-06 12:24:19,754 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic physical activity and engage in muscle-strengthening activities on 2 or more days a week'}
-2025-04-06 12:24:19,754 - app - INFO - Job 113 added to the queue for processing.
-2025-04-06 12:24:19,756 - app - INFO - Received get_results request for job_id: 113
-2025-04-06 12:24:19,756 - app - INFO - Job 113 is still running
-2025-04-06 12:24:19,958 - app - INFO - Received get_results request for job_id: 113
-2025-04-06 12:24:19,958 - app - INFO - Job 113 is done
-2025-04-06 12:24:19,961 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults aged 18 years and older who have obesity'}
-2025-04-06 12:24:19,961 - app - INFO - Job 114 added to the queue for processing.
-2025-04-06 12:24:19,963 - app - INFO - Received get_results request for job_id: 114
-2025-04-06 12:24:19,963 - app - INFO - Job 114 is still running
-2025-04-06 12:24:20,165 - app - INFO - Received get_results request for job_id: 114
-2025-04-06 12:24:20,165 - app - INFO - Job 114 is done
+2025-04-06 12:44:24,977 - app - INFO - Job 213 is still running
+2025-04-06 12:44:25,179 - app - INFO - Received get_results request for job_id: 213
+2025-04-06 12:44:25,179 - app - INFO - Job 213 is done
+2025-04-06 12:44:25,182 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who report consuming vegetables less than one time daily'}
+2025-04-06 12:44:25,182 - app - INFO - Job 214 added to the queue for processing.
+2025-04-06 12:44:25,184 - app - INFO - Received get_results request for job_id: 214
+2025-04-06 12:44:25,184 - app - INFO - Job 214 is still running
+2025-04-06 12:44:25,386 - app - INFO - Received get_results request for job_id: 214
+2025-04-06 12:44:25,386 - app - INFO - Job 214 is done
+2025-04-06 12:44:25,389 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)'}
+2025-04-06 12:44:25,389 - app - INFO - Job 215 added to the queue for processing.
+2025-04-06 12:44:25,391 - app - INFO - Received get_results request for job_id: 215
+2025-04-06 12:44:25,391 - app - INFO - Job 215 is still running
+2025-04-06 12:44:25,593 - app - INFO - Received get_results request for job_id: 215
+2025-04-06 12:44:25,593 - app - INFO - Job 215 is done
+2025-04-06 12:44:25,596 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults aged 18 years and older who have an overweight classification'}
+2025-04-06 12:44:25,596 - app - INFO - Job 216 added to the queue for processing.
+2025-04-06 12:44:25,598 - app - INFO - Received get_results request for job_id: 216
+2025-04-06 12:44:25,598 - app - INFO - Job 216 is still running
+2025-04-06 12:44:25,800 - app - INFO - Received get_results request for job_id: 216
+2025-04-06 12:44:25,800 - app - INFO - Job 216 is done
+2025-04-06 12:44:25,803 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who report consuming fruit less than one time daily'}
+2025-04-06 12:44:25,803 - app - INFO - Job 217 added to the queue for processing.
+2025-04-06 12:44:25,805 - app - INFO - Received get_results request for job_id: 217
+2025-04-06 12:44:25,805 - app - INFO - Job 217 is still running
+2025-04-06 12:44:26,007 - app - INFO - Received get_results request for job_id: 217
+2025-04-06 12:44:26,007 - app - INFO - Job 217 is done
+2025-04-06 12:44:26,010 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic physical activity and engage in muscle-strengthening activities on 2 or more days a week'}
+2025-04-06 12:44:26,010 - app - INFO - Job 218 added to the queue for processing.
+2025-04-06 12:44:26,012 - app - INFO - Received get_results request for job_id: 218
+2025-04-06 12:44:26,012 - app - INFO - Job 218 is still running
+2025-04-06 12:44:26,214 - app - INFO - Received get_results request for job_id: 218
+2025-04-06 12:44:26,214 - app - INFO - Job 218 is done
+2025-04-06 12:44:26,216 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults aged 18 years and older who have obesity'}
+2025-04-06 12:44:26,216 - app - INFO - Job 219 added to the queue for processing.
+2025-04-06 12:44:26,219 - app - INFO - Received get_results request for job_id: 219
+2025-04-06 12:44:26,219 - app - INFO - Job 219 is still running
+2025-04-06 12:44:26,420 - app - INFO - Received get_results request for job_id: 219
+2025-04-06 12:44:26,421 - app - INFO - Job 219 is done
+2025-04-06 12:44:26,423 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who achieve at least 300 minutes a week of moderate-intensity aerobic physical activity or 150 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)'}
+2025-04-06 12:44:26,424 - app - INFO - Job 220 added to the queue for processing.
+2025-04-06 12:44:26,425 - app - INFO - Received get_results request for job_id: 220
+2025-04-06 12:44:26,425 - app - INFO - Job 220 is still running
+2025-04-06 12:44:26,628 - app - INFO - Received get_results request for job_id: 220
+2025-04-06 12:44:26,628 - app - INFO - Job 220 is done
+2025-04-06 12:44:26,630 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who engage in no leisure-time physical activity'}
+2025-04-06 12:44:26,630 - app - INFO - Job 221 added to the queue for processing.
+2025-04-06 12:44:26,632 - app - INFO - Received get_results request for job_id: 221
+2025-04-06 12:44:26,632 - app - INFO - Job 221 is still running
+2025-04-06 12:44:26,834 - app - INFO - Received get_results request for job_id: 221
+2025-04-06 12:44:26,834 - app - INFO - Job 221 is done
+2025-04-06 12:44:26,836 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who engage in muscle-strengthening activities on 2 or more days a week'}
+2025-04-06 12:44:26,836 - app - INFO - Job 222 added to the queue for processing.
+2025-04-06 12:44:26,838 - app - INFO - Received get_results request for job_id: 222
+2025-04-06 12:44:26,838 - app - INFO - Job 222 is still running
+2025-04-06 12:44:27,040 - app - INFO - Received get_results request for job_id: 222
+2025-04-06 12:44:27,040 - app - INFO - Job 222 is done
+2025-04-06 12:44:27,042 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who report consuming vegetables less than one time daily'}
+2025-04-06 12:44:27,042 - app - INFO - Job 223 added to the queue for processing.
+2025-04-06 12:44:27,043 - app - INFO - Received get_results request for job_id: 223
+2025-04-06 12:44:27,043 - app - INFO - Job 223 is still running
+2025-04-06 12:44:27,245 - app - INFO - Received get_results request for job_id: 223
+2025-04-06 12:44:27,245 - app - INFO - Job 223 is done
+2025-04-06 12:44:27,247 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic activity (or an equivalent combination)'}
+2025-04-06 12:44:27,247 - app - INFO - Job 224 added to the queue for processing.
+2025-04-06 12:44:27,249 - app - INFO - Received get_results request for job_id: 224
+2025-04-06 12:44:27,249 - app - INFO - Job 224 is still running
+2025-04-06 12:44:27,451 - app - INFO - Received get_results request for job_id: 224
+2025-04-06 12:44:27,451 - app - INFO - Job 224 is done
+2025-04-06 12:44:27,453 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults aged 18 years and older who have an overweight classification'}
+2025-04-06 12:44:27,453 - app - INFO - Job 225 added to the queue for processing.
+2025-04-06 12:44:27,455 - app - INFO - Received get_results request for job_id: 225
+2025-04-06 12:44:27,455 - app - INFO - Job 225 is still running
+2025-04-06 12:44:27,657 - app - INFO - Received get_results request for job_id: 225
+2025-04-06 12:44:27,657 - app - INFO - Job 225 is done
+2025-04-06 12:44:27,659 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who report consuming fruit less than one time daily'}
+2025-04-06 12:44:27,659 - app - INFO - Job 226 added to the queue for processing.
+2025-04-06 12:44:27,662 - app - INFO - Received get_results request for job_id: 226
+2025-04-06 12:44:27,662 - app - INFO - Job 226 is still running
+2025-04-06 12:44:27,864 - app - INFO - Received get_results request for job_id: 226
+2025-04-06 12:44:27,864 - app - INFO - Job 226 is done
+2025-04-06 12:44:27,866 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults who achieve at least 150 minutes a week of moderate-intensity aerobic physical activity or 75 minutes a week of vigorous-intensity aerobic physical activity and engage in muscle-strengthening activities on 2 or more days a week'}
+2025-04-06 12:44:27,866 - app - INFO - Job 227 added to the queue for processing.
+2025-04-06 12:44:27,867 - app - INFO - Received get_results request for job_id: 227
+2025-04-06 12:44:27,868 - app - INFO - Job 227 is still running
+2025-04-06 12:44:28,069 - app - INFO - Received get_results request for job_id: 227
+2025-04-06 12:44:28,069 - app - INFO - Job 227 is done
+2025-04-06 12:44:28,072 - app - INFO - Received states_mean request with data: {'question': 'Percent of adults aged 18 years and older who have obesity'}
+2025-04-06 12:44:28,072 - app - INFO - Job 228 added to the queue for processing.
+2025-04-06 12:44:28,074 - app - INFO - Received get_results request for job_id: 228
+2025-04-06 12:44:28,074 - app - INFO - Job 228 is still running
+2025-04-06 12:44:28,276 - app - INFO - Received get_results request for job_id: 228
+2025-04-06 12:44:28,276 - app - INFO - Job 228 is done

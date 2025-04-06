@@ -114,7 +114,7 @@ def state_mean_request():
         JSON: Job ID for the created task or error if server is shutting down
     """
     data = request.json
-    webserver.logger.info("Received states_mean request with data: %s", data)
+    webserver.logger.info("Received state_mean request with data: %s", data)
     if not webserver.tasks_runner.graceful_shutdown.is_set():
         job_id = webserver.job_counter
         # Create task as a closure
@@ -149,7 +149,7 @@ def best5_request():
         JSON: Job ID for the created task or error if server is shutting down
     """
     data = request.json
-    webserver.logger.info("Received states_mean request with data: %s", data)
+    webserver.logger.info("Received best5 request with data: %s", data)
     if not webserver.tasks_runner.graceful_shutdown.is_set():
         job_id = webserver.job_counter
         # Create task as a closure
@@ -184,7 +184,7 @@ def worst5_request():
         JSON: Job ID for the created task or error if server is shutting down
     """
     data = request.json
-    webserver.logger.info("Received states_mean request with data: %s", data)
+    webserver.logger.info("Received worst5 request with data: %s", data)
     if not webserver.tasks_runner.graceful_shutdown.is_set():
         job_id = webserver.job_counter
         # Create task as a closure
@@ -219,7 +219,7 @@ def global_mean_request():
         JSON: Job ID for the created task or error if server is shutting down
     """
     data = request.json
-    webserver.logger.info("Received states_mean request with data: %s", data)
+    webserver.logger.info("Received global_mean request with data: %s", data)
     if not webserver.tasks_runner.graceful_shutdown.is_set():
         job_id = webserver.job_counter
         # Create task as a closure
@@ -255,7 +255,7 @@ def diff_from_mean_request():
         JSON: Job ID for the created task or error if server is shutting down
     """
     data = request.json
-    webserver.logger.info("Received states_mean request with data: %s", data)
+    webserver.logger.info("Received diff_from_mean request with data: %s", data)
     if not webserver.tasks_runner.graceful_shutdown.is_set():
         job_id = webserver.job_counter
         # Create task as a closure
@@ -278,7 +278,7 @@ def diff_from_mean_request():
     webserver.logger.error("Server is shutting down, cannot process request.")
     return jsonify({
         "status": "error",
-        "reason": "shutdown"
+        "reason": "shutting down"
     })
 
 @webserver.route('/api/state_diff_from_mean', methods=['POST'])
@@ -290,7 +290,7 @@ def state_diff_from_mean_request():
         JSON: Job ID for the created task or error if server is shutting down
     """
     data = request.json
-    webserver.logger.info("Received states_mean request with data: %s", data)
+    webserver.logger.info("Received state_diff_from_mean request with data: %s", data)
     if not webserver.tasks_runner.graceful_shutdown.is_set():
         job_id = webserver.job_counter
         # Create task as a closure
@@ -325,7 +325,7 @@ def mean_by_category_request():
         JSON: Job ID for the created task or error if server is shutting down
     """
     data = request.json
-    webserver.logger.info("Received states_mean request with data: %s", data)
+    webserver.logger.info("Received mean_by_category request with data: %s", data)
     if not webserver.tasks_runner.graceful_shutdown.is_set():
         job_id = webserver.job_counter
         # Create task as a closure
