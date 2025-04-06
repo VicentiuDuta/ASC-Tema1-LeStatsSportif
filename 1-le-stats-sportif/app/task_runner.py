@@ -2,7 +2,7 @@
 This module implements a thread pool system for handling asynchronous tasks.
 It provides classes to manage a pool of worker threads and execute submitted jobs.
 """
-from queue import Queue
+from queue import Queue, Empty
 from threading import Thread, Event, Lock
 import time
 import os
@@ -88,17 +88,17 @@ class TaskRunner(Thread):
         
         Continuously pulls jobs from the queue, executes them, and saves results to disk.
         """
-        while True:
+        while not self.threadpool.graceful_shutdown.is_set():
             # Get pending job
             # Execute the job and save the result to disk
             # Repeat until graceful_shutdown
             try:
                 # Get job from queue
-                job_info = self.threadpool.queue.get()
+                job_info = self.threadpool.queue.get(timeout = 1.0)
+                
                 job_id = job_info['job_id']
                 task = job_info['task']
                 # Execute the task
-                print(f"TaskRunner {self.id} executing job {job_id}")
                 result = task()
 
                 # Save the result to disk
@@ -113,7 +113,10 @@ class TaskRunner(Thread):
                 with self.threadpool.remaining_jobs_lock:
                     self.threadpool.remaining_jobs -= 1
 
-                print(f"TaskRunner {self.id} finished job {job_id}")
+            except Empty:
+                # No jobs in the queue
+                continue
 
             except Exception as e:
                 print(f"Error in TaskRunner {self.id}: {e}")
+        

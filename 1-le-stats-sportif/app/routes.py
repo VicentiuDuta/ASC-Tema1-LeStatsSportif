@@ -21,7 +21,6 @@ def post_endpoint():
         # Assuming the request contains JSON data
         data = request.json
         print(f"got data in post {data}")
-
         # Process the received data
         # For demonstration purposes, just echoing back the received data
         response = {"message": "Received data successfully", "data": data}
@@ -52,7 +51,6 @@ def get_results(job_id):
     #        'status': 'done',
     #        'data': res
     #    })
-
     # If not, return running status
 
     if job_id not in webserver.tasks_runner.jobs:
