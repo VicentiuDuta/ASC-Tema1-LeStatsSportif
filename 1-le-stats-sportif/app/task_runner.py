@@ -31,7 +31,7 @@ class ThreadPool:
 
         else:
             self.num_threads = os.cpu_count()
-
+            
         self.threads = []
         self.queue = Queue()
         self.jobs = {}
@@ -95,7 +95,6 @@ class TaskRunner(Thread):
             try:
                 # Get job from queue
                 job_info = self.threadpool.queue.get(timeout = 1.0)
-                
                 job_id = job_info['job_id']
                 task = job_info['task']
                 # Execute the task
@@ -119,4 +118,3 @@ class TaskRunner(Thread):
 
             except Exception as e:
                 print(f"Error in TaskRunner {self.id}: {e}")
-        
