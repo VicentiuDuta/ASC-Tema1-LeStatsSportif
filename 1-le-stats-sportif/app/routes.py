@@ -42,7 +42,7 @@ def get_results(job_id):
     Returns:
         JSON: Status of the job and results if completed
     """
-    print(f"JobID is {job_id}")
+    webserver.logger.info(f"Received get_results request for job_id: {job_id}")
     job_id = int(job_id)
     # Check if job_id is valid
     # Check if job_id is done and return the result
@@ -54,17 +54,20 @@ def get_results(job_id):
     # If not, return running status
 
     if job_id not in webserver.tasks_runner.jobs:
+        webserver.logger.error(f"Invalid job_id: {job_id}")
         return jsonify({
             "status": "error",
             "reason": "Invalid job_id"
         })
 
     if webserver.tasks_runner.jobs[job_id]['status'] == 'running':
+        webserver.logger.info(f"Job {job_id} is still running")
         return jsonify({
             "status": "running"
         })
 
     if webserver.tasks_runner.jobs[job_id]['status'] == 'done':
+        webserver.logger.info(f"Job {job_id} is done")
         result_file = f"results/{str(job_id)}"
         if os.path.exists(result_file):
             with open(result_file, 'r', encoding='utf-8') as f:
@@ -82,11 +85,11 @@ def states_mean_request():
     Returns:
         JSON: Job ID for the created task or error if server is shutting down
     """
+    data = request.json
+    webserver.logger.info(f"Received states_mean request with data: {data}")
     # Check if the graceful shutdown event is set
     if not webserver.tasks_runner.graceful_shutdown.is_set():
         # Get request data
-        data = request.json
-        print(f"Got request {data}")
         # Register job. Don't wait for task to finish
         # Increment job_id counter
         # Return associated job_id
@@ -104,9 +107,12 @@ def states_mean_request():
         # Increment threadpool remaining jobs
         with webserver.tasks_runner.remaining_jobs_lock:
             webserver.tasks_runner.remaining_jobs += 1
+        
+        webserver.logger.info(f"Job {job_id} added to the queue for processing.")
         # Return associated job_id
         return jsonify({"job_id": job_id})
 
+    webserver.logger.error("Server is shutting down, cannot process request.")
     return jsonify({
         "status": "error",
         "reason": "shutting down"
@@ -120,8 +126,9 @@ def state_mean_request():
     Returns:
         JSON: Job ID for the created task or error if server is shutting down
     """
+    data = request.json
+    webserver.logger.info(f"Received state_mean request with data: {data}")
     if not webserver.tasks_runner.graceful_shutdown.is_set():
-        data = request.json
         job_id = webserver.job_counter
         # Create task as a closure
         def task():
@@ -136,9 +143,11 @@ def state_mean_request():
         with webserver.tasks_runner.remaining_jobs_lock:
             webserver.tasks_runner.remaining_jobs += 1
 
+        webserver.logger.info(f"Job {job_id} added to the queue for processing.")
         # Return associated job_id
         return jsonify({"job_id": job_id})
 
+    webserver.logger.error("Server is shutting down, cannot process request.")
     return jsonify({
             "status": "error",
             "reason": "shutting down"
@@ -152,8 +161,9 @@ def best5_request():
     Returns:
         JSON: Job ID for the created task or error if server is shutting down
     """
+    data = request.json
+    webserver.logger.info(f"Received best5 request with data: {data}")
     if not webserver.tasks_runner.graceful_shutdown.is_set():
-        data = request.json
         job_id = webserver.job_counter
         # Create task as a closure
         def task():
@@ -168,9 +178,11 @@ def best5_request():
         with webserver.tasks_runner.remaining_jobs_lock:
             webserver.tasks_runner.remaining_jobs += 1
 
+        webserver.logger.info(f"Job {job_id} added to the queue for processing.")
         # Return associated job_id
         return jsonify({"job_id": job_id})
 
+    webserver.logger.error("Server is shutting down, cannot process request.")
     return jsonify({
         "status": "error",
         "reason": "shutting down"
@@ -184,8 +196,9 @@ def worst5_request():
     Returns:
         JSON: Job ID for the created task or error if server is shutting down
     """
+    data = request.json
+    webserver.logger.info(f"Received worst5 request with data: {data}")
     if not webserver.tasks_runner.graceful_shutdown.is_set():
-        data = request.json
         job_id = webserver.job_counter
         # Create task as a closure
         def task():
@@ -200,9 +213,11 @@ def worst5_request():
         with webserver.tasks_runner.remaining_jobs_lock:
             webserver.tasks_runner.remaining_jobs += 1
 
+        webserver.logger.info(f"Job {job_id} added to the queue for processing.")
         # Return associated job_id
         return jsonify({"job_id": job_id})
 
+    webserver.logger.error("Server is shutting down, cannot process request.")
     return jsonify({
         "status": "error",
         "reason": "shutting down"
@@ -216,8 +231,9 @@ def global_mean_request():
     Returns:
         JSON: Job ID for the created task or error if server is shutting down
     """
+    data = request.json
+    webserver.logger.info(f"Received global_mean request with data: {data}")
     if not webserver.tasks_runner.graceful_shutdown.is_set():
-        data = request.json
         job_id = webserver.job_counter
         # Create task as a closure
         def task():
@@ -232,9 +248,11 @@ def global_mean_request():
         with webserver.tasks_runner.remaining_jobs_lock:
             webserver.tasks_runner.remaining_jobs += 1
 
+        webserver.logger.info(f"Job {job_id} added to the queue for processing.")
         # Return associated job_id
         return jsonify({"job_id": job_id})
 
+    webserver.logger.error("Server is shutting down, cannot process request.")
     return jsonify({
         "status": "error",
         "reason": "shutting down"
@@ -249,8 +267,9 @@ def diff_from_mean_request():
     Returns:
         JSON: Job ID for the created task or error if server is shutting down
     """
+    data = request.json
+    webserver.logger.info(f"Received diff_from_mean request with data: {data}")
     if not webserver.tasks_runner.graceful_shutdown.is_set():
-        data = request.json
         job_id = webserver.job_counter
         # Create task as a closure
         def task():
@@ -265,9 +284,11 @@ def diff_from_mean_request():
         with webserver.tasks_runner.remaining_jobs_lock:
             webserver.tasks_runner.remaining_jobs += 1
 
+        webserver.logger.info(f"Job {job_id} added to the queue for processing.")
         # Return associated job_id
         return jsonify({"job_id": job_id})
 
+    webserver.logger.error("Server is shutting down, cannot process request.")
     return jsonify({
         "status": "error",
         "reason": "shutdown"
@@ -281,8 +302,9 @@ def state_diff_from_mean_request():
     Returns:
         JSON: Job ID for the created task or error if server is shutting down
     """
+    data = request.json
+    webserver.logger.info(f"Received state_diff_from_mean request with data: {data}")
     if not webserver.tasks_runner.graceful_shutdown.is_set():
-        data = request.json
         job_id = webserver.job_counter
         # Create task as a closure
         def task():
@@ -296,10 +318,11 @@ def state_diff_from_mean_request():
         # Increment threadpool remaining jobs
         with webserver.tasks_runner.remaining_jobs_lock:
             webserver.tasks_runner.remaining_jobs += 1
-
+        webserver.logger.info(f"Job {job_id} added to the queue for processing.")
         # Return associated job_id
         return jsonify({"job_id": job_id})
 
+    webserver.logger.error("Server is shutting down, cannot process request.")
     return jsonify({
         "status": "error",
         "reason": "shutting down"
@@ -313,8 +336,9 @@ def mean_by_category_request():
     Returns:
         JSON: Job ID for the created task or error if server is shutting down
     """
+    data = request.json
+    webserver.logger.info(f"Received mean_by_category request with data: {data}")
     if not webserver.tasks_runner.graceful_shutdown.is_set():
-        data = request.json
         job_id = webserver.job_counter
         # Create task as a closure
         def task():
@@ -329,9 +353,11 @@ def mean_by_category_request():
         with webserver.tasks_runner.remaining_jobs_lock:
             webserver.tasks_runner.remaining_jobs += 1
 
+        webserver.logger.info(f"Job {job_id} added to the queue for processing.")
         # Return associated job_id
         return jsonify({"job_id": job_id})
 
+    webserver.logger.error("Server is shutting down, cannot process request.")
     return jsonify({
         "status": "error",
         "reason": "shutting down"
@@ -345,8 +371,9 @@ def state_mean_by_category_request():
     Returns:
         JSON: Job ID for the created task or error if server is shutting down
     """
+    data = request.json
+    webserver.logger.info(f"Received state_mean_by_category request with data: {data}")
     if not webserver.tasks_runner.graceful_shutdown.is_set():
-        data = request.json
         job_id = webserver.job_counter
         # Create task as a closure
         def task():
@@ -361,9 +388,11 @@ def state_mean_by_category_request():
         with webserver.tasks_runner.remaining_jobs_lock:
             webserver.tasks_runner.remaining_jobs += 1
 
+        webserver.logger.info(f"Job {job_id} added to the queue for processing.")
         # Return associated job_id
         return jsonify({"job_id": job_id})
 
+    webserver.logger.error("Server is shutting down, cannot process request.")
     return jsonify({
         "status": "error",
         "reason": "shutting down"
@@ -378,6 +407,9 @@ def get_num_jobs():
     Returns:
         JSON: Number of remaining jobs
     """
+    webserver.logger.info("Received request for number of jobs in the queue.")
+    # Return the number of jobs in the queue
+    webserver.logger.info(f"Number of jobs in the queue: {webserver.tasks_runner.remaining_jobs}")
     return jsonify({
         'num_jobs': webserver.tasks_runner.remaining_jobs
     })
@@ -392,13 +424,16 @@ def graceful_shutdown():
     Returns:
         JSON: Status indicating if the server is still processing jobs or ready to shut down
     """
+    webserver.logger.info("Received request for graceful shutdown.")
     # Set the graceful shutdown event
     webserver.tasks_runner.graceful_shutdown.set()
     if webserver.tasks_runner.remaining_jobs > 0:
+        webserver.logger.info("Server is still processing jobs.")
         return jsonify({
             "status": "running"
         })
 
+    webserver.logger.info("Server is ready to shut down.")
     return jsonify({
         "status": "done"
     })
@@ -411,13 +446,14 @@ def jobs():
     Returns:
         JSON: List of all job IDs and their current status
     """
+    webserver.logger.info("Received request for all jobs information.")
     data = []
     # Extract job informations from the tasks_runner
     for job_id, job_info in webserver.tasks_runner.jobs.items():
         data.append({
             f'job_id_{str(job_id)}': job_info['status']
         })
-
+    webserver.logger.info(f"Sent jobs information: {data}")
     return jsonify({
         "status": "done",
         "data": data  
