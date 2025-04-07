@@ -21,6 +21,9 @@ if __name__ != "unittests.TestWebserver":
     webserver.logger = logging.getLogger(__name__)
     # Set the logging level to INFO
     webserver.logger.setLevel(logging.INFO)
+    # Check if the logs directory exists, if not create it
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
     # Create a rotating file handler for logging
     handler = RotatingFileHandler('logs/webserver.log', maxBytes = 10000, backupCount = 10)
     # Set the timezone to UTC
