@@ -1,7 +1,7 @@
 import os
 import unittest
 import numpy as np
-from unittests.data_ingestor import DataIngestor
+from app.data_ingestor import DataIngestor
 
 class TestWebserver(unittest.TestCase):
     """

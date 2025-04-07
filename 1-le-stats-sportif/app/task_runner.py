@@ -68,7 +68,7 @@ class TaskRunner(Thread):
     executes them, and saves their results to disk.
     """
     def __init__(self, tid, threadpool):
-        Thread.__init__(self)
+        Thread.__init__(self, daemon = True)
         self.id = tid
         self.threadpool = threadpool
 
