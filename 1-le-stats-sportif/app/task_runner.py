@@ -16,15 +16,6 @@ class ThreadPool:
     variable (TP_NUM_OF_THREADS) or by the system's CPU count.
     """
     def __init__(self):
-        # You must implement a ThreadPool of TaskRunners
-        # Your ThreadPool should check if an environment variable TP_NUM_OF_THREADS is defined
-        # If the env var is defined, that is the number of threads to be used by the thread pool
-        # Otherwise, you are to use what the hardware concurrency allows
-        # You are free to write your implementation as you see fit, but
-        # You must NOT:
-        #   * create more threads than the hardware concurrency allows
-        #   * recreate threads for each task
-        # Note: the TP_NUM_OF_THREADS env var will be defined by the checker
         if 'TP_NUM_OF_THREADS' in os.environ:
             self.num_threads = int(os.environ['TP_NUM_OF_THREADS'])
 
@@ -105,15 +96,12 @@ class TaskRunner(Thread):
 
                 # Mark the job as done
                 job_info['status'] = 'done'
-
                 self.threadpool.queue.task_done()
 
+                # Update the remaining jobs count
                 with self.threadpool.remaining_jobs_lock:
                     self.threadpool.remaining_jobs -= 1
 
             except Empty:
                 # No jobs in the queue
                 continue
-
-            except Exception as e:
-                print(f"Error in TaskRunner {self.id}: {e}")

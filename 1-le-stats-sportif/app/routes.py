@@ -69,6 +69,11 @@ def get_results(job_id):
                 "data": result
             })
 
+    return jsonify({
+                "status": "done",
+                "data": result
+            })
+
 @webserver.route('/api/states_mean', methods=['POST'])
 def states_mean_request():
     """
@@ -459,6 +464,7 @@ def index():
     Returns:
         str: HTML formatted list of available routes
     """
+    webserver.logger.info("Received request for index page.")
     routes = get_defined_routes()
     msg = "Hello, World!\n Interact with the webserver using one of the defined routes:\n"
 
@@ -468,6 +474,7 @@ def index():
         paragraphs = "".join(f"<p>{route}</p>" for route in routes)
 
     msg += paragraphs
+    webserver.logger.info("Sent index page with routes information.")
     return msg
 
 def get_defined_routes():
